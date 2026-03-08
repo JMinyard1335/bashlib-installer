@@ -27,7 +27,7 @@ Options:
 Examples:
   installer update https://github.com/user/tool.git
   installer update --global https://github.com/user/tool.git
-  installer update --install /tmp/tool-src https://github.com/user/tool.git
+  installer update --clone-dir /tmp/tool-src https://github.com/user/tool.git
 EOF
 }
 
