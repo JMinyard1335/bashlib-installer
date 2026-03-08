@@ -1,0 +1,115 @@
+#! /usr/bin/env bash
+# Tool to install, update and remove scripts and binary's
+#
+# Usedul when creating shell/bash scripts. You can install
+# a program by specifying a path to the program and a flag
+# that determines where it will be installed.
+#    'installer install --global $HOME/project_dir'
+# This tool is designed for GNU linux systems and
+# will install local tools to '$HOME/.local/{bin, lib}' and global
+# tools to '/usr/{bin, lib}'. This is where the remove command
+# will look when attempting to remove the desired tool.
+#    'installer remove [opts] <tool_name>
+# flags can be given to determine which folders to search.
+# the user will be prompted to remove each of the files
+# to prevent them from removing something they do not want.
+# The responsibility is on YOU the USER to check which files
+# will be deleted.
+# The update command can be given a git repo which will
+# download and have the install script run.
+# installer install [opts] <path>
+# installer remove [opts] <tool>
+# installer update [opts] <repo>
+
+#!/usr/bin/env bash
+# Tool to install, update and remove scripts and binaries.
+
+
+SCRIPT_PATH="$(realpath -- "$0")"
+SCRIPT_DIR="$(dirname -- "$SCRIPT_PATH")"
+SCRIPT_NAME="$(basename -- "$0")"
+
+if [[ -d "$SCRIPT_DIR/lib" ]]; then
+    LIB_DIR="$SCRIPT_DIR/lib"
+elif [[ -d "$HOME/.local/lib/$SCRIPT_NAME" ]]; then
+    LIB_DIR="$HOME/.local/lib/$SCRIPT_NAME"
+elif [[ -d "/usr/lib/$SCRIPT_NAME" ]]; then
+    LIB_DIR="/usr/lib/$SCRIPT_NAME"
+else
+    printf '[Error]: Could not locate library directory for %s\n' "$SCRIPT_NAME" >&2
+    exit 1
+fi
+
+
+source "$LIB_DIR/install.sh"
+source "$LIB_DIR/remove.sh"
+source "$LIB_DIR/update.sh"
+
+COMMAND=""
+ARGS=()
+
+_main_valid_command() {
+    case "$1" in
+        install|remove|update|help) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+_main_usage() {
+    cat <<EOF
+Usage:
+  installer <command> [args]
+
+Commands:
+  install     Install a tool
+  remove      Remove a tool
+  update      Update a tool from a repo
+  help        Show this help message
+EOF
+}
+
+_main_parse_args() {
+    [[ $# -eq 0 ]] && {
+        _main_usage
+        exit 1
+    }
+
+    case "$1" in
+        -h|--help|help)
+            COMMAND="help"
+            shift
+            ;;
+        *)
+            if _main_valid_command "$1"; then
+                COMMAND="$1"
+                shift
+            else
+                printf '[Error]: unknown command: %s\n' "$1" >&2
+                _main_usage
+                exit 1
+            fi
+            ;;
+    esac
+
+    ARGS=("$@")
+}
+
+_main_run_command() {
+    case "$COMMAND" in
+        install) install_cmd "${ARGS[@]}" ;;
+        remove)  remove_cmd "${ARGS[@]}" ;;
+        update)  update_cmd "${ARGS[@]}" ;;
+        help)    _main_usage ;;
+        *)
+            printf '[Error]: no dispatcher for command: %s\n' "$COMMAND" >&2
+            return 1
+            ;;
+    esac
+}
+
+main() {
+    _main_parse_args "$@"
+    _main_run_command
+}
+
+main "$@"
