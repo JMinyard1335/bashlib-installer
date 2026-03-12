@@ -30,3 +30,17 @@ toml_w <file> <table> <value> # writes to toml file
 ```bash
 installer install --repo <url>
 ```
+
+#### Remove
+1. Got rid of the following options as they provided nothing
+   - [--search]
+   - [--lib, --bin]
+   - [--global]
+
+#### Update
+1. now more of a real updater.
+2. takes in tool name
+3. searches install paths for the tool.
+4. if it finds the tool searches its lib/tool/ for tool.toml
+5. pulls the repo from the meta data.
+6. clones and installs the update.
