@@ -2,11 +2,27 @@
 
 A collection of scripts to help you manage the install, update, and removing custom bash script 
 from your linux system. This is a personal project and probably not suited for secure development
-enviroments. 
+enviroments. The installer can add tools to one of two paths
+```bash
+# Global (System wide)
+/usr/bin
+/usr/lib
+
+# Locally (your user only)
+$HOME/.local/bin
+$HOME/.local/lib
+```
 
 ## COMMANDS
 
-The following is the list of commands and some examples of usage.
+The following is the list of commands and some examples of usage. The installer itself is simply
+a dispatcher similar to other tools like git heres how to get started
+```bash
+installer help
+installer install --help
+installer remove --help
+installer update --help
+```
 
 ### Install
 
@@ -78,6 +94,3 @@ cd installer
 chmod +x installer
 installer install .
 ```
-
-
-
