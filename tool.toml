@@ -1,0 +1,6 @@
+[project]
+name="installer"
+author="Jachin Minyard"
+repo="https://github.com/JMinyard1335/Bash-Installer"
+
+[dependencies]

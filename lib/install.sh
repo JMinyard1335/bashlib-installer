@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 # Used in the installer tool to install the desired path to your system.
 #
-# Supports:
-#   1. Single-file installs to bin
-#   2. Project installs:
-#        <project-root>/<tool-name>
-#        <project-root>/lib/*
+# Uses the tool.toml file to get the tool file name.
 #
 # Local installs go to:
 #   ~/.local/bin
@@ -15,6 +11,8 @@
 #   /usr/bin
 #   /usr/lib
 
+source ./read-toml.sh
+
 INSTALL_LOCAL_BIN="$HOME/.local/bin"
 INSTALL_LOCAL_LIB="$HOME/.local/lib"
 
@@ -23,7 +21,6 @@ INSTALL_GLOBAL_LIB="/usr/lib"
 
 INSTALL_GLOBAL=false
 INSTALL_PATH=""
-INSTALL_TOOL_NAME=""
 
 _install_usage() {
     cat <<EOF

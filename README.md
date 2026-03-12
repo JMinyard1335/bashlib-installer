@@ -13,6 +13,23 @@ $HOME/.local/bin
 $HOME/.local/lib
 ```
 
+Every tool that uses this installer will need to implement a `tool.toml` file. I know I know 
+another configuration file but hey its a simple enough way to do things. I chose TOML because
+it is simple enough to read and understand. an example file would be
+```toml
+[project]
+name="myproject"
+author="your name"
+repo="path/to/repo"
+
+[dependencies]
+other-project="path/to/other-project/repo"
+
+```
+
+All dependencies need to also be in the installers format. This will not install things that can
+not be installed with this installer.
+
 ## COMMANDS
 
 The following is the list of commands and some examples of usage. The installer itself is simply
