@@ -226,9 +226,39 @@ _install_move_metadata() {
     return 0
 }
 
-# _install_deps <dependency list>
+# _install_deps <Path to toml>
+# Reads dependencies from the toml file and installs them if not present.
 _install_deps() {
-    echo "not implemented"
+    local toml_file="$1"
+    local deps
+    deps=$(toml_get_table "$toml_file" "dependencies")
+    
+    if [[ -z "$deps" ]]; then
+        return 0
+    fi
+
+    _install_log "Checking dependencies..."
+    
+    while IFS='|' read -r name url; do
+        if [[ -z "$name" ]]; then continue; fi
+        
+        # Check if already installed in current INSTALL_LOCATION
+        if [[ -f "${INSTALL_LOCATION}/bin/${name}" ]]; then
+            _install_log "Dependency ${MAGENTA}${name}${RESET} is already installed. Skipping."
+        else
+            _install_log "Installing dependency ${MAGENTA}${name}${RESET} from ${MAGENTA}${url}${RESET}..."
+            # Save current TOOL_PATH as it might be overwritten by recursive calls
+            local old_tool_path="$TOOL_PATH"
+            install_from_repo "$url" || {
+                _install_error "Failed to install dependency: ${name}"
+                TOOL_PATH="$old_tool_path"
+                return 1
+            }
+            TOOL_PATH="$old_tool_path"
+        fi
+    done <<< "$deps"
+    
+    return 0
 }
 
 # install_from_dir <path> <tool>
@@ -237,6 +267,7 @@ install_from_dir() {
     local path="$1"
     local tool="$2"
     
+    _install_deps "${path}/tool.toml" || return 1
     _install_move_to_bin "$path" "$tool" || return 1
     _install_move_to_lib "$path" "$tool" || return 1
     _install_move_metadata "$path" "$tool" || return 1
