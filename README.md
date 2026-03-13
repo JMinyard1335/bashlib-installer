@@ -124,5 +124,66 @@ chmod +x installer
 installer install .
 ```
 
+## Using the installer in other projects
+
+When creating a tool script I usually end up with an API along the lines of the following.
+```bash
+<tool> <function> [opts] <args>
+```
+so it makes sense to allow the tool to do something along the lines of 
+```bash
+<tool> install
+<tool> update
+<tool> remove
+```
+to this end add the following code to some where in your script when `tool install` is called
+```bash
+# if the tool is not installed globally or locally
+local which_installer=$(which installer)
+if [[ -z "$which_installer ]]; then
+    printf "installer needed for project install now (y/N): "
+    read -r answer
+
+	# if the answer is not yes exit/.
+    if [[ ! "$answer" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+        echo "installer not installed. exiting."
+        exit 1
+    fi
+
+	# create a temp dir
+	local temp_dir=""
+	temp_dir="$(mktemp -d)" || {
+		error "Failed to create temporary directory"
+		exit 1
+	}
+
+	# attempt to clone
+	git clone "$installer_repo" "$temp_dir" || {
+		error "Failed to clone installer repository"
+		rm -rf -- "$temp_dir"
+		exit 1
+	}	
+
+	# attempt to install installer.
+	"$temp_dir/installer" install "$temp_dir" || {
+		error "Failed to install installer"
+		rm -rf -- "$temp_dir"
+		exit 1
+	}
+
+	# clean up the temp dir
+	rm -rf -- "$temp_dir"
+
+	# make sure install worked.
+	which_installer="$(command -v installer)"
+	[[ -z "$which_installer" ]] && {
+		error "Installer still not found after installation"
+		 exit 1
+	}
+fi
+```
+Yes this is quite the long script but toss it in a function or its own file and source it easy.
+
+
 ## TODO
 - [ ] Implement the dependency installer.
