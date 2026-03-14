@@ -151,4 +151,51 @@ toml_w() {
     
 }
 
+# toml_get_table <file> <table>
+# Returns key|value pairs for all entries in the table.
+toml_get_table() {
+    local file="$1"
+    local table="$2"
+
+    if [[ -z "$file" || -z "$table" ]]; then
+        return 1
+    fi
+
+    if ! _toml_valid_file "$file"; then
+        return 1
+    fi
+
+    if ! _toml_has_table "$file" "$table"; then
+        return 0 # return success but empty
+    fi
+
+    awk -v table="$table" '
+        BEGIN { in_table = 0 }
+        /^[[:space:]]*\[/ { in_table = 0 }
+        $0 ~ "^[[:space:]]*\\[" table "\\][[:space:]]*$" { in_table = 1; next }
+        in_table && $0 ~ "^[[:space:]]*[^[#=]+=" {
+            match($0, /=[[:space:]]*/)
+            key = substr($0, 1, RSTART-1)
+            val = substr($0, RSTART+RLENGTH)
+            
+            # trim key
+            gsub(/^[[:space:]]+|[[:space:]]+$/, "", key)
+            
+            # trim value and comments
+            sub(/[[:space:]]+#.*$/, "", val)
+            gsub(/^[[:space:]]+|[[:space:]]+$/, "", val)
+            
+            # strip quotes
+            if (val ~ /^".*"$/) {
+                sub(/^"/, "", val)
+                sub(/"$/, "", val)
+            } else if (val ~ /^'\''.*'\''$/) {
+                sub(/^'\''/, "", val)
+                sub(/'\''$/, "", val)
+            }
+            print key "|" val
+        }
+    ' "$file"
+}
+
 ## -------------------------------------------------------------------------
