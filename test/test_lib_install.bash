@@ -88,6 +88,7 @@ test_move_to_lib() {
     assert_true "$status" "move_to_lib should succeed, got $status"
     assert_installed_dir "$HOME/.local/lib/mytool" "lib install dir should exist"
     assert_installed_file "$HOME/.local/lib/mytool/helper.bash" "lib file should be copied"
+    assert_installed_file "$HOME/.local/lib/mytool/tool.toml" "tool metadata should be copied to lib dir"
 
     cleanup_test_env
     echo -e "\e[1;32m[TEST]:\e[0m move_to_lib passed"
@@ -144,6 +145,7 @@ test_install_from_source() {
     assert_installed_file "$HOME/.local/bin/mytool" "installed bin tool missing"
     assert_installed_dir "$HOME/.local/lib/mytool" "installed lib dir missing"
     assert_installed_file "$HOME/.local/lib/mytool/helper.bash" "installed lib file missing"
+    assert_installed_file "$HOME/.local/lib/mytool/tool.toml" "installed tool metadata missing"
     assert_installed_dir "$HOME/.local/libexec/mytool" "installed libexec dir missing"
     assert_installed_file "$HOME/.local/libexec/mytool/mytool-subcmd" "installed libexec file missing"
 
