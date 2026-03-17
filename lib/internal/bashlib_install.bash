@@ -303,15 +303,21 @@ _bashlib_move_to_lib() {
         return 1
     fi
 
-    if [[ ! -d "${tool_path}/lib" ]]; then
-        [[ "$debug" -ge 2 ]] && echo "[debug]: No lib/ directory for ${tool_name}"
-        return 0
+    if [[ ! -f "${tool_path}/tool.toml" ]]; then
+        echo "_bashlib_move_to_lib: Missing tool metadata: ${tool_path}/tool.toml" >&2
+        return 1
     fi
 
     dest="${install_path}/lib/${tool_name}"
     mkdir -p -- "$dest" || return 1
 
-    cp -r -- "${tool_path}/lib/." "$dest" || return 1
+    if [[ -d "${tool_path}/lib" ]]; then
+        cp -r -- "${tool_path}/lib/." "$dest" || return 1
+    else
+        [[ "$debug" -ge 2 ]] && echo "[debug]: No lib/ directory for ${tool_name}"
+    fi
+
+    install -m 644 -- "${tool_path}/tool.toml" "${dest}/tool.toml" || return 1
     return 0
 }
 
