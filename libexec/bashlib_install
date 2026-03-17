@@ -11,9 +11,32 @@
 #   /usr/bin
 #   /usr/lib
 
-SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/toml.sh"
-source "${SCRIPT_DIR}/installer-color.sh"
+## SOURCE GUARD bashlib_install ----------------------------------------------------------
+if [[ -v installer_cli_install_sourced ]]; then
+    return 0
+fi
+installer_cli_install_sourced=1
+## ---------------------------------------------------------------------------------------
+
+## SECTION USED TO GET CORRECT SOURCE PATH DO NOT REMOVE.
+# Name of the main tool
+installer_tool_name="installer"
+installer_cli_install_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+installer_tool_lib_dir=""
+
+# Resolve install/dev paths
+if [[ "${installer_cli_install_dir}" == "${HOME}/.local/libexec/${installer_tool_name}" ]]; then
+    [[ -d "${HOME}/.local/lib/${installer_tool_name}" ]] && installer_tool_lib_dir="${HOME}/.local/lib/${installer_tool_name}"
+elif [[ "${installer_cli_install_dir}" == "/usr/libexec/${installer_tool_name}" ]]; then
+    [[ -d "/usr/lib/${installer_tool_name}" ]] && installer_tool_lib_dir="/usr/lib/${installer_tool_name}"
+else
+    [[ -d "${installer_cli_install_dir}/../lib" ]] && installer_tool_lib_dir="${installer_cli_install_dir}/../lib"
+fi
+
+source "${installer_tool_lib_dir}/bashlib_install.bash"
+## End of  SOURCE GUARD
+
+
 
 # Set to false by default so tools go to local install.
 INSTALL_GLOBAL=false
@@ -24,7 +47,7 @@ TOOL_PATH=""				# Path to the tools project.
 REPO=false
 
 _install_usage() {
-    cat <<EOF
+ a   cat <<EOF
 Usage:
   installer install [options] <path>
 

@@ -1,6 +1,14 @@
 [project]
-name="installer" # used to install tools
+project="bashlib-installer"
 author="Jachin Minyard"
+tool="installer"
 repo="https://github.com/JMinyard1335/Bash-Installer"
 
+[directories]
+lib="lib"
+libexec="libexec"
+man="man"
+
 [dependencies]
+toml="https://github.com/JMinyard1335/bashlib-toml"
+format="https://github.com/JMinyard1335/Bash-Formatter"
