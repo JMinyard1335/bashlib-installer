@@ -7,7 +7,7 @@
 #    'installer install --global $HOME/project_dir'
 # This tool is designed for GNU linux systems and
 # will install local tools to '$HOME/.local/{bin, lib}' and global
-# tools to '/usr/{bin, lib}'. This is where the remove command
+# tools to '/usr/local/{bin, lib}'. This is where the remove command
 # will look when attempting to remove the desired tool.
 #    'installer remove [opts] <tool_name>
 # flags can be given to determine which folders to search.
@@ -36,14 +36,13 @@ if [[ -d "$SCRIPT_DIR/lib" ]]; then
 elif [[ -d "$HOME/.local/lib/$SCRIPT_NAME" ]]; then
     LIB_DIR="$HOME/.local/lib/$SCRIPT_NAME"
     LIBEXEC_DIR="$HOME/.local/libexec/$SCRIPT_NAME"
-elif [[ -d "/usr/lib/$SCRIPT_NAME" ]]; then
+elif [[ -d "/usr/local/lib/$SCRIPT_NAME" ]]; then
     LIB_DIR="/usr/local/lib/$SCRIPT_NAME"
-    LIB_DIR="/usr/local/libexec/$SCRIPT_NAME"
+    LIBEXEC_DIR="/usr/local/libexec/$SCRIPT_NAME"
 else
     printf '[Error]: Could not locate library directory for %s\n' "$SCRIPT_NAME" >&2
     exit 1
 fi
-
 
 source "$LIB_DIR/internal/bashlib_install.bash"
 source "$LIB_DIR/internal/bashlib_remove.bash"

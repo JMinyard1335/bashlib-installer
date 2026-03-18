@@ -168,7 +168,7 @@ _install_parse_args() {
 _install_get_dir() {
     local global="$1"
     if [[ "$global" == true ]]; then
-        INSTALL_LOCATION="/usr"
+        INSTALL_LOCATION="/usr/local"
     else
         INSTALL_LOCATION="$HOME/.local"
     fi

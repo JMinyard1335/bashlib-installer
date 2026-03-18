@@ -6,10 +6,10 @@ installer_tool_name="installer"
 installer_cli_remove_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 installer_tool_lib_dir=""
 
-if [[ "${installer_cli_remove_dir}" == "${HOME}/.local/libexec/${installer_tool_name}" ]]; then
+if [[ "${installer_cli_remove_dir}" = "${HOME}/.local/libexec/${installer_tool_name}" ]]; then
     [[ -d "${HOME}/.local/lib/${installer_tool_name}" ]] && installer_tool_lib_dir="${HOME}/.local/lib/${installer_tool_name}"
-elif [[ "${installer_cli_remove_dir}" == "/usr/libexec/${installer_tool_name}" ]]; then
-    [[ -d "/usr/lib/${installer_tool_name}" ]] && installer_tool_lib_dir="/usr/lib/${installer_tool_name}"
+elif [[ "${installer_cli_remove_dir}" = "/usr/local/libexec/${installer_tool_name}" ]]; then
+    [[ -d "/usr/local/lib/${installer_tool_name}" ]] && installer_tool_lib_dir="/usr/local/lib/${installer_tool_name}"
 else
     [[ -d "${installer_cli_remove_dir}/../lib" ]] && installer_tool_lib_dir="${installer_cli_remove_dir}/../lib"
 fi
@@ -93,8 +93,8 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
         1) exit 1 ;;
         2) exit 0 ;;
     esac
-
+    
     bashlib_remove_tool "$TOOL_NAME"
     exit $?
 fi
-}
+
