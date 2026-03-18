@@ -17,6 +17,7 @@ $HOME/.local/lib
 $HOME/.local/libexec
 ```
 
+If installing or running any command globally you need access to root on your system usually through `sudo`.
 Every tool that uses this installer must include a `tool.toml` file. I know, I know, another
 configuration file, but it's a simple way to handle metadata. I chose TOML because
 it is easy to read and understand. An example file would be:
@@ -51,8 +52,8 @@ installer update --help
 
 ### Install
 
-Used to install a project to a path, either locally or globally. To use it on your own project, you must
-lay out the project as follows:
+Used to install a project to a path, either locally or globally. To install something globally you need access to root 
+aka `sudo`. To use it on your own project, you must lay out the project as follows:
 
 ```
 project/
