@@ -171,12 +171,29 @@ test_install_from_repo() {
     echo -e "\e[1;32m[TEST]:\e[0m install_from_repo passed"
 }
 
+test_install_bad_install_path() {
+    local status=""
+    echo "Testing giving bad install path to install."
+
+    cleanup_test_env
+    setup_test_env
+    
+    bashlib_install_from_source "$SRC_ROOT" "$HOME/" 0 > /dev/null 2>&1
+    status="$?"
+    assert_false "$status" "install_from_repo should fail if bad install path is given"
+    
+    cleanup_test_env
+    echo -e "\e[1;32m[TEST]:\e[0m test_bad_install_path passed"
+}
+
+
 test_lib_install_main() {
     echo -e "\e[1;36m[TEST]:\e[0m Running installer tests..."
 
     test_move_to_lib
     test_move_to_libexec
     test_move_to_bin
+    test_install_bad_install_path
     test_install_from_source
     test_install_from_repo
 
