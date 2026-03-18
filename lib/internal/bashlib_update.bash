@@ -76,7 +76,7 @@ bashlib_update_tool() {
 	installer_log "Updating from "
 	installer_path "$repo"
 	printf "\n"
-
+	echo "$install_prefix"
 	bashlib_install_from_repo "$repo" "$install_prefix" 0 || return 1
 
 	installer_ok "$tool_name updated successfully."

@@ -7,8 +7,8 @@ installer_tool_lib_dir=""
 
 if [[ "${installer_cli_update_dir}" == "${HOME}/.local/libexec/${installer_tool_name}" ]]; then
     [[ -d "${HOME}/.local/lib/${installer_tool_name}" ]] && installer_tool_lib_dir="${HOME}/.local/lib/${installer_tool_name}"
-elif [[ "${installer_cli_update_dir}" == "/usr/libexec/${installer_tool_name}" ]]; then
-    [[ -d "/usr/lib/${installer_tool_name}" ]] && installer_tool_lib_dir="/usr/lib/${installer_tool_name}"
+elif [[ "${installer_cli_update_dir}" == "/usr/local/libexec/${installer_tool_name}" ]]; then
+    [[ -d "/usr/local/lib/${installer_tool_name}" ]] && installer_tool_lib_dir="/usr/local/lib/${installer_tool_name}"
 else
     [[ -d "${installer_cli_update_dir}/../lib" ]] && installer_tool_lib_dir="${installer_cli_update_dir}/../lib"
 fi
