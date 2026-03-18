@@ -7,12 +7,14 @@ two paths:
 
 ```bash
 # Global (system-wide)
-/usr/bin
-/usr/lib
+/usr/local/bin
+/usr/local/lib
+/usr/local/libexec
 
 # Locally (your user only)
 $HOME/.local/bin
 $HOME/.local/lib
+$HOME/.local/libexec
 ```
 
 Every tool that uses this installer must include a `tool.toml` file. I know, I know another
@@ -21,14 +23,15 @@ it is easy to read and understand. An example file would be:
 
 ```toml
 [project]
-name="myproject"
-author="your name"
+tool="myproject"
 repo="path/to/repo"
 
 [dependencies]
 other-project="path/to/other-project/repo"
 
 ```
+
+you can add additional metadata if you want but it will not be used by the installer currently.
 
 All dependencies must also have a `tool.toml` file, as that is how this tool works. When
 downloading dependencies, they will be installed with the
@@ -54,6 +57,8 @@ project/
 	project		# script or executable
 	tool.toml	# metadata file
 	lib/		# place for additional files and libraries
+	libexec/	# place for additional subcommands
+	
 ```
 
 Usage:
@@ -136,7 +141,12 @@ so it makes sense to allow the tool to do something along the lines of
 <tool> update
 <tool> remove
 ```
-to this end add the following code to some where in your script when `tool install` is called
+
+### Installing the installer from your script
+
+You can install the installer locally without much trouble most of the time. 
+to this end add the following code to some where in your script when `tool install` is called.
+
 ```bash
 # if the tool is not installed globally or locally
 local which_installer=$(which installer)
@@ -182,8 +192,34 @@ if [[ -z "$which_installer ]]; then
 	}
 fi
 ```
-Yes this is quite the long script but toss it in a function or its own file and source it easy.
+Yes this is quite the long script but toss it in a function or its own file and source it easy. The above code 
+simply tells the user the installer is required and ask if they wish to install it. If they answer no the program will exit
+if not the installer will be installed and you are good to go.
 
+### Sourcing the Installer Lib
+
+If the installer is installed you can easily source it with the following:
+
+``` bash
+if [[ -f "${HOME}/.local/lib/installer/bashlib_installer.bash" ]]; then
+    source "${HOME}/.local/lib/installer/bashlib_installer.bash"
+elif [[ -f "/usr/local/lib/installer/bashlib_installer.bash" ]]; then
+    source "/usr/local/lib/installer/bashlib_installer.bash"
+else
+    echo "couldn't source the installer."
+	exit 1
+fi
+```
+
+This will give you access to the underlying API used by the CLI tool
+
+``` bash
+bashlib_install_dependencies <path-to-source-dir> <install-path> <debug-level>
+bashlib_install_from_repo <url-to-repo> <install-path> <debug-level>
+bashlib_install_from_source <path-to-source-dir> <install-path> <debug-level>
+bashlib_update_tool <tool-name>
+bashlib_remove_tool <tool-name>
+```
 
 ## TODO
 - [ ] Implement the dependency installer.

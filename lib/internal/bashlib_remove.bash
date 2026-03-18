@@ -53,6 +53,7 @@ _remove_global() {
     [[ -d "$global_exec" ]] && _confirm_remove "$global_exec" "directory"
 }
 
+# bashlib_remove_tool <tool name>
 # Remove the named tool from standard install locations. The caller
 # (typically a libexec wrapper) should handle argument parsing and
 # logging setup. Returns 0 on success.
