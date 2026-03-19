@@ -47,7 +47,9 @@ fi
 source "$LIB_DIR/internal/bashlib_install.bash"
 source "$LIB_DIR/internal/bashlib_remove.bash"
 source "$LIB_DIR/internal/bashlib_update.bash"
+source "$LIB_DIR/internal/bashlib_create.bash"
 source "$LIB_DIR/internal/installer_format.bash"
+source "$LIB_DIR/internal/bashlib_create.bash"
 
 # ----------------------------------------------------------------------------------------
 
@@ -57,7 +59,7 @@ ARGS=()
 
 _main_valid_command() {
     case "$1" in
-        install|remove|update|help) return 0 ;;
+        install|remove|update|create|help) return 0 ;;
         *) return 1 ;;
     esac
 }
@@ -68,10 +70,11 @@ Usage:
   installer <command> [args]
 
 Commands:
-  install     Install a tool
-  remove      Remove a tool
-  update      Update a tool from a repo
-  help        Show this help message
+  install	Install a tool
+  remove	Remove a tool
+  update	Update a tool from a repo
+  create	Creates a new bash package project	      
+  help		Show this help message
 EOF
 }
 
@@ -106,6 +109,7 @@ _main_run_command() {
         install) "${LIBEXEC_DIR}/bashlib_install" "${ARGS[@]}" ;;
         remove)  "${LIBEXEC_DIR}/bashlib_remove" "${ARGS[@]}" ;;
         update)  "${LIBEXEC_DIR}/bashlib_update" "${ARGS[@]}" ;;
+	    create) create_new_project ;; 
         help)    _main_usage ;;
         *)
             printf '[Error]: no dispatcher for command: %s\n' "$COMMAND" >&2
