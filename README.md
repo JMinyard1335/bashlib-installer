@@ -1,9 +1,13 @@
-# Bash Installer V2
+# BashLib Installer
 
-A collection of scripts to help you manage installing, updating, and removing custom bash scripts
-from your Linux system. It was newly rewritten for easier use. This is a personal project and is
-probably not suited for secure development environments. The installer can add tools to one of
-two paths:
+Now part of my bashlib tool chain this tool makes up one of the core features (Install, Remove, Update) of custom bash scripts to your system.
+The aim was to make it easy to create bash project that could reuse code and install it like a dependency if it wasnt located on the system.
+I had grown tired of not having a better way to write bash programs other than copy paste and reuse code that way. which is in a way what this is
+but in a more orgnizied way.
+
+This tool is built to be a stand alone tool and must require no other tools in the bashlib toolchain to install. 
+This is a personal project and is probably not suited for secure development environments. 
+The installer can add tools to one of two paths:
 
 ```bash
 # Global (system-wide)
@@ -17,10 +21,16 @@ $HOME/.local/lib
 $HOME/.local/libexec
 ```
 
+**MAKE SURE THESE ARE ON PATH IF NOT ALREADY**
+
 If installing or running any command globally you need access to root on your system usually through `sudo`.
-Every tool that uses this installer must include a `tool.toml` file. I know, I know, another
-configuration file, but it's a simple way to handle metadata. I chose TOML because
-it is easy to read and understand. An example file would be:
+
+## BAP's (bash packages)
+
+Im just going to call the `bap's` for now or bash packages. A bap requires a `tool.toml` file. 
+I know, I know, another configuration file, but it's a simple way to handle metadata. I chose TOML because
+it is easy to read and understand. 
+An example file would be:
 
 ```toml
 [project]
@@ -38,7 +48,7 @@ All dependencies must also have a `tool.toml` file, as that is how this tool wor
 downloading dependencies, they will be installed with the
 `installer install --repo <link>` command.
 
-## COMMANDS
+## Installer CLI.
 
 The following is a list of commands and some examples of usage. The installer itself is simply
 a dispatcher similar to other tools like git. Here's how to get started:
@@ -217,7 +227,7 @@ Yes, this is quite the long script, but toss it in a function or its own file an
 The code above simply tells the user the installer is required and asks if they want to install it.
 If they answer no, the program exits. If not, the installer is installed and you are good to go.
 
-### Sourcing the Installer Lib
+### Sourcing the Installer Lib (Best way to use in scripts)
 
 If the installer is installed, you can easily source it with the following:
 
@@ -231,8 +241,8 @@ else
 	exit 1
 fi
 ```
-
-This will give you access to the underlying API used by the CLI tool:
+While you could just call something like `installer install $var` in your script it is faster to source.
+Sourcing the project will give you access to the following API in your code.
 
 ```bash
 bashlib_install_dependencies <path-to-source-dir> <install-path> <debug-level>
@@ -241,6 +251,8 @@ bashlib_install_from_source <path-to-source-dir> <install-path> <debug-level>
 bashlib_update_tool <tool-name>
 bashlib_remove_tool <tool-name>
 ```
+
+`bashlib_install_dependencies` is not really used in most of my scripts as it is called by `bashlib_install_from_source` which is called by everything but `bashlib_remove_tool`.
 
 ## Contributing
 
