@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-## SOURCE GUARD bashlib_install.bash -----------------------------------------------------
+## SOURCE GUARD bashlib_create.bash -----------------------------------------------------
 if [[ -v installer_lib_create_sourced ]]; then
     return 0
 fi
