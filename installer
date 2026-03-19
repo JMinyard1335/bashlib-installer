@@ -109,7 +109,7 @@ _main_run_command() {
         install) "${LIBEXEC_DIR}/bashlib_install" "${ARGS[@]}" ;;
         remove)  "${LIBEXEC_DIR}/bashlib_remove" "${ARGS[@]}" ;;
         update)  "${LIBEXEC_DIR}/bashlib_update" "${ARGS[@]}" ;;
-	    create) create_new_project ;; 
+	    create) create_new_project "${ARGS[@]}" ;; 
         help)    _main_usage ;;
         *)
             printf '[Error]: no dispatcher for command: %s\n' "$COMMAND" >&2
