@@ -148,13 +148,6 @@ fi
 ```
 While you could just call something like `installer install $var` in your script, it is faster to source.
 Sourcing the project will give you access to the following API in your code.
-
-```bash
-bashlib_install_dependencies <path-to-source-dir> <install-path> <debug-level>
-bashlib_install_from_repo <url-to-repo> <install-path> <debug-level>
-bashlib_install_from_source <path-to-source-dir> <install-path> <debug-level>
-bashlib_update_tool <tool-name>
-bashlib_remove_tool <tool-name>
-```
+see [here](API.md) for the full API.
 
 `bashlib_install_dependencies` is not really used in most of my scripts as it is called by `bashlib_install_from_source` which is called by everything but `bashlib_remove_tool`.
