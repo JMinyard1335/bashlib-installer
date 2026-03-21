@@ -150,4 +150,3 @@ While you could just call something like `installer install $var` in your script
 Sourcing the project will give you access to the following API in your code.
 see [here](API.md) for the full API.
 
-`bashlib_install_dependencies` is not really used in most of my scripts as it is called by `bashlib_install_from_source` which is called by everything but `bashlib_remove_tool`.
