@@ -5,7 +5,6 @@ Part of my bashlib toolchain, this handles core package actions for Bash project
 - install
 - remove
 - update
-- create scaffold
 
 The goal is simple: stop copy-pasting scripts between repos and make Bash projects reusable.
 
